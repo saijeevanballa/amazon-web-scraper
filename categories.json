@@ -1,0 +1,94 @@
+[
+    {
+        "CATEGORY": "HOME APPLIANCES",
+        "SUB_CATEGORY": [
+            "AIR CONDITIONERS",
+            "AIR COOLERS",
+            "CHAIRS",
+            "FANS",
+            "WATER HEATERS",
+            "HOME THEATRES",
+            "INVERTERS",
+            "REFRIGERATOR",
+            "SOUND BARS",
+            "TELEVISIONS",
+            "WASHING MACHINES",
+            "WATER PURIFIERS",
+            "DISH WASHERS",
+            "EGG COOKERS",
+            "ELECTRIC COOKERS",
+            "ELECTRIC PANS",
+            "GAS STOVES",
+            "INDUCTION STOVE",
+            "JUICE BLENDERS",
+            "LUNCH BOXES",
+            "MICRO OVENS",
+            "MIXER & WET GRINDERS",
+            "ROTI MAKERS",
+            "WATER KETTLES",
+            "WATER COOLERS",
+            "SANDWICH MAKERS"
+        ]
+    },
+    {
+        "CATEGORY": "MOBILES",
+        "SUB_CATEGORY": [
+            "SMARTPHONES",
+            "SMARTPHONES CASES",
+            "EARPHONES",
+            "BLUETOOTH EARPHONES",
+            "CHARGER AND CABLES",
+            "POWER BANKS",
+            "SOUND BARS",
+            "POCKET SOUNDBARS",
+            "TELEVISION",
+            "SMARTWATCH"]
+    },
+    {
+        "CATEGORY": "SPORTS AND FITNESS",
+        "SUB_CATEGORY": [
+            "PROTEIN SUPPLEMENTS",
+            "VITAMIN SUPPLEMENTS",
+            "HEALTH DRINKS",
+            "SHAKERS",
+            "DUMBBELLS",
+            "SKIRTING SKATES & BOARDS",
+            "SKIVING ACCESSORIES",
+            "SKIPPING ROPE",
+            "BICYCLE",
+            "BICYCLE ACCESSORIES",
+            "CRICKET BATS",
+            "CRICKET ACCESSORIES",
+            "BADMINTON ACCESSORIES",
+            "BADMINTON RACKETS",
+            "FOOTBALLS",
+            "FOOTBALL ACCESSORIES",
+            "VOLLEYBALL",
+            "VOLLEYBALL ACCESSORIES",
+            "SWIMMING ACCESSORIES",
+            "INDOOR GAMES",
+            "CARROMS",
+            "BOARD GAMES"
+        ]
+    },
+    {
+        "CATEGORY": "SPORTS AND FITNESS",
+        "SUB_CATEGORY": [
+            "BEAN BAGS",
+            "BEDS",
+            "BOOK SELVES",
+            "BATHROOM DOORS",
+            "CHAIRS",
+            "COFFEE TABLES",
+            "DINNING TABLES",
+            "DOORMATS",
+            "DRAWERS",
+            "DRESSING TABLES",
+            "MATTRESSES",
+            "PILLOWS",
+            "SHOERACKS",
+            "SOFAS",
+            "TABLES"
+        ]
+    }
+]
