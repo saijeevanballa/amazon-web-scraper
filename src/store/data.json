@@ -1,0 +1,18 @@
+{
+  "amazon": {
+    "intial_screening": {
+      "status": true,
+      "category": [
+      ],
+      "subCategory": [
+      ],
+      "folders": [
+      ]
+    },
+    "Product_screening": {
+      "category": [],
+      "subcategory": [],
+      "products": []
+    }
+  }
+}

@@ -1,9 +1,9 @@
-import store from "./store/store";
 import puppeteer from "puppeteer";
 import { logState } from "./utils/logger";
 import { initiateAmazon } from "./website/amazon/main";
 import { checkAndCreateFolder } from "./utils/handleFile";
 import { join } from "path";
+import store, { getAllState } from "./store/state";
 
 // Creating Base Folder
 checkAndCreateFolder(join(__dirname, "..", store.BASE_FOLDER));
@@ -23,11 +23,16 @@ checkAndCreateFolder(join(__dirname, "..", store.BASE_FOLDER));
       },
     });
     let websites = Object.keys(store.links);
+    let state = getAllState()
     for (let website of websites) {
       logState(website);
       switch (website) {
         case "AMAZON":
-          await initiateAmazon(browser);
+          if(!state.amazon.intial_screening.status){
+            await initiateAmazon(browser);
+          } else {
+            //  product screening
+          }
           break;
 
         default:

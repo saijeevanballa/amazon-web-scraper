@@ -1,31 +1,49 @@
-import store from "../../store/store";
 import { checkAndCreateFolder, writeJsonToFile } from "../../utils/handleFile";
 import { getInnerText, loadPage } from "../../utils/scrapUtils";
 import { join } from "path";
+import store, { getAllState, updateKey } from "../../store/state";
+import { logState } from "../../utils/logger";
 let last_used_title_xpath = "";
 
 export async function initiateAmazon(browser: any) {
   checkAndCreateFolder(join(__dirname, "..", "..", "..", store.BASE_FOLDER, "AMAZON"));
   for (let category of store.categories) {
-    for (let subCategory of category.SUB_CATEGORY) {
-      let SUB_CATEGORY_FOLDER = join(__dirname, "..", "..", "..", store.BASE_FOLDER, "AMAZON", subCategory.split(" ").join("_"));
-      checkAndCreateFolder(SUB_CATEGORY_FOLDER);
-      let page = await loadPage(browser, store.links.AMAZON(subCategory));
-      let [pageCount]: any = await getPageCount(page);
-      await page.close();
-      try {
-        await loopProductPagesItems(browser, subCategory, Number(pageCount), SUB_CATEGORY_FOLDER);
-      } catch (error) {
-        console.log(error);
+    let state = getAllState()
+    if (!state.amazon.intial_screening.category.includes(category)) {
+      logState(category.CATEGORY)
+      checkAndCreateFolder(join(__dirname, "..", "..", "..", store.BASE_FOLDER, "AMAZON", category.CATEGORY.split(" ").join("_")))
+      for (let subCategory of category.SUB_CATEGORY) {
+        if (!state.amazon.intial_screening.subCategory.includes(subCategory)) {
+          logState(subCategory)
+          let SUB_CATEGORY_FOLDER = join(__dirname, "..", "..", "..", store.BASE_FOLDER, "AMAZON", category.CATEGORY.split(" ").join("_"), subCategory.split(" ").join("_"));
+          checkAndCreateFolder(SUB_CATEGORY_FOLDER);
+          let page = await loadPage(browser, store.links.AMAZON(subCategory));
+          let [pageCount]: any = await getPageCount(page);
+          await page.close();
+          try {
+            await loopProductPagesItems(browser, subCategory, Number(pageCount), SUB_CATEGORY_FOLDER);
+          } catch (error) {
+            console.log(error);
+          }
+          if (!state.amazon.intial_screening.subCategory.includes(subCategory)) {
+            state = updateKey("amazon.intial_screening.subCategory", [...state.amazon.intial_screening.subCategory, subCategory])
+            updateKey("amazon.intial_screening.folders", [...state.amazon.intial_screening.folders, SUB_CATEGORY_FOLDER])
+          }
+          logState("DONE - " + subCategory)
+        }
       }
+      if (!state.amazon.intial_screening.category.includes(category.CATEGORY)) state = updateKey("amazon.intial_screening.category", [...state.amazon.intial_screening.category, category.CATEGORY])
+      logState("DONE - " + category.CATEGORY)
     }
   }
+  updateKey("amazon.intial_screening.status", true)
+  logState("DONE - AMAZON INTIAL SCREENING")
 }
 
 async function loopProductPagesItems(browser: any, subCategory: string, pageCount: number, folderPath: string) {
   let PRODUCTS_DATA: any = [];
   try {
-    for (let i = 1; i <= Number(pageCount); i++) {
+    for (let i = pageCount; i <= pageCount; i++) {
       let page = await loadPage(browser, store.links.AMAZON(subCategory, i));
       let products: any = await getMainPageProductsData(page);
       PRODUCTS_DATA = [...PRODUCTS_DATA, ...products];
@@ -34,6 +52,7 @@ async function loopProductPagesItems(browser: any, subCategory: string, pageCoun
   } catch (error) {
     console.log(error);
   } finally {
+    logState(` TOTAL ${subCategory} DATA : ${PRODUCTS_DATA.length} `)
     writeJsonToFile(join(folderPath, "products.json"), PRODUCTS_DATA);
   }
 }
@@ -70,17 +89,19 @@ async function getPageCount(page: any) {
     return await getInnerText(count, "innerText");
   } catch (error) {
     console.log(error);
+    return [1]
   }
 }
 
 async function findTitleXpath(page: any) {
   try {
-    let title_xpath = [`//div[2]/div/div/div/div/div/div/div/div/div/div/h2/a/span`, `//div[2]/div/div/div/div/div/div/div/h2/a/span`];
+    let title_xpath = [
+      `//div[2]/div/div/div/div/div/div/div/div/div/div/h2/a/span`,
+      `//div[2]/div/div/div/div/div/div/div/h2/a/span`,];
     if (last_used_title_xpath) {
       try {
         return await checkXpath(page, last_used_title_xpath);
       } catch (error) {
-        console.log(error);
       }
     }
 
@@ -88,7 +109,6 @@ async function findTitleXpath(page: any) {
       try {
         return await checkXpath(page, xpath);
       } catch (error) {
-        console.log(error);
       }
     }
 
