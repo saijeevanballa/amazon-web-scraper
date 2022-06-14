@@ -16,7 +16,7 @@ const DATA_FILE_PATH = join(__dirname, "data.json")
 
 export function getAllState() {
     let data = readFileSync(DATA_FILE_PATH, "utf8");
-    return JSON.parse(data)
+    return {...JSON.parse(data), store}
 }
 
 export function getKeyData(key: string) {

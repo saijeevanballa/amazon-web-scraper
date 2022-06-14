@@ -43,7 +43,7 @@ export async function initiateAmazon(browser: any) {
 async function loopProductPagesItems(browser: any, subCategory: string, pageCount: number, folderPath: string) {
   let PRODUCTS_DATA: any = [];
   try {
-    for (let i = pageCount; i <= pageCount; i++) {
+    for (let i = 1; i <= pageCount; i++) {
       let page = await loadPage(browser, store.links.AMAZON(subCategory, i));
       let products: any = await getMainPageProductsData(page);
       PRODUCTS_DATA = [...PRODUCTS_DATA, ...products];
