@@ -57,3 +57,22 @@ export async function loadPage(browser: any, page_url: string) {
     await page.close();
   }
 }
+
+export async function checkXpath(page: any, xpath: string) {
+  await page.waitForXPath(xpath);
+  let title = await page.$x(xpath);
+  if (title.length > 0) {
+    return xpath;
+  }
+}
+
+async function getInnerTextUsingXpath(page: any, xpath: string) {
+  try {
+    await page.waitForXPath(xpath);
+    let el = await page.$x(xpath);
+    return await getInnerText(el, "innerText");
+  } catch (error) {
+    console.log(error);
+    return [1]
+  }
+}

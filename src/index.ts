@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 import { logState } from "./utils/logger";
-import { initiateAmazon } from "./website/amazon/main";
-import { checkAndCreateFolder } from "./utils/handleFile";
+import { initiateAmazon, productScreeing } from "./website/amazon/main";
+import { checkAndCreateFolder, generateProductList } from "./utils/handleFile";
 import { join } from "path";
 import store, { getAllState } from "./store/state";
 
@@ -28,11 +28,11 @@ checkAndCreateFolder(join(__dirname, "..", store.BASE_FOLDER));
       logState(website);
       switch (website) {
         case "AMAZON":
-          if(!state.amazon.intial_screening.status){
+          if (!state.amazon.intial_screening.status) {
             await initiateAmazon(browser);
-          } else {
-            //  product screening
           }
+          generateProductList((getAllState()).amazon.intial_screening.folders)
+          await productScreeing()
           break;
 
         default:
@@ -44,3 +44,5 @@ checkAndCreateFolder(join(__dirname, "..", store.BASE_FOLDER));
     console.log(error);
   }
 })().catch(console.error);
+
+

@@ -126,3 +126,9 @@ async function checkXpath(page: any, xpath: string) {
     return xpath;
   }
 }
+
+export async function productScreeing(){
+  try {
+    console.log("function not implemented")
+  } catch (error) {}
+}
