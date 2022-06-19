@@ -1,5 +1,6 @@
 import { checkAndCreateFolder, writeJsonToFile } from "../../utils/handleFile";
-import { getInnerText, loadPage } from "../../utils/scrapUtils";
+import { getInnerText, getInnerTextUsingXpath, loadPage } from "../../utils/scrapUtils";
+import { readFileSync } from "fs"
 import { join } from "path";
 import store, { getAllState, updateKey } from "../../store/state";
 import { logState } from "../../utils/logger";
@@ -127,8 +128,61 @@ async function checkXpath(page: any, xpath: string) {
   }
 }
 
-export async function productScreeing(){
+export async function productScreeing(browser: any) {
   try {
-    console.log("function not implemented")
-  } catch (error) {}
+    let state = getAllState()
+    for (let category of store.categories) {
+      logState(category.CATEGORY)
+      for (let subCategory of category.SUB_CATEGORY) {
+        logState(subCategory)
+        let SUB_CATEGORY_FOLDER = join(__dirname, "..", "..", "..", store.BASE_FOLDER, "AMAZON", category.CATEGORY.split(" ").join("_"), subCategory.split(" ").join("_"));
+        let ProductsData = JSON.parse(readFileSync(join(SUB_CATEGORY_FOLDER, "products.json"), "utf8"));
+        await loopProdutsData(browser, ProductsData, category.CATEGORY, subCategory)
+        logState("DONE - " + subCategory)
+      }
+      logState("DONE - " + category.CATEGORY)
+    }
+    logState("DONE - AMAZON INTIAL SCREENING")
+  } catch (error) { }
+}
+
+async function loopProdutsData(browser: any, products: any, category: string, subCategory: string) {
+  try {
+
+    for (let product of products) {
+      let page = await loadPage(browser, product.href)
+      await getProductDetails(page)
+    }
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
+async function getProductDetails(page: any) {
+  let product_data: any = {};
+  const TITLE_XPATH = `/html[1]/body[1]/div[2]/div[2]/div[5]/div[4]/div[4]/div[1]/div[1]/h1[1]/span[1]`;
+  const OFFER_PRICE = `/html[1]/body[1]/div[2]/div[2]/div[5]/div[4]/div[4]/div[10]/div[1]/div[1]/span[2]/span[2]/span[2]`
+  const ORIGINAL_PRICE = `/html[1]/body[1]/div[2]/div[2]/div[5]/div[4]/div[4]/div[10]/div[1]/div[2]/span[1]/span[1]/span[1]/span[2]`
+  const PHOTOS_LIST = `/html[1]/body[1]/div[2]/div[2]/div[5]/div[4]/div[3]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]`
+  const PRODUCTS_LIST = `/html[1]/body[1]/div[2]/div[2]/div[5]/div[4]/div[4]/div[34]/div[1]/div[3]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]`
+  const PRODUCT_DETAILS_TABLE = `/html[1]/body[1]/div[2]/div[2]/div[5]/div[4]/div[4]/div[43]/div[1]/table[1]`
+  const PRODUCT_FEATURES = `/html[1]/body[1]/div[2]/div[2]/div[5]/div[4]/div[4]/div[44]/div[1]`
+  const PRODUCT_TECHNICAL_DETAILS_TABLE = `/html[1]/body[1]/div[2]/div[2]/div[5]/div[20]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]`;
+  const PRODUCT_ADITIONAL_DETAILS_TABLE = `/html[1]/body[1]/div[2]/div[2]/div[5]/div[20]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]`;
+
+  product_data.title = await getInnerTextUsingXpath(page, TITLE_XPATH)
+  product_data.offer_price = await getInnerTextUsingXpath(page, OFFER_PRICE)
+  product_data.original_price = await getInnerTextUsingXpath(page, ORIGINAL_PRICE);
+
+  console.log(product_data)
+
+
+
+  //  get tittle
+  //  get price
+  //  check models
+  // specs
+  //  tech spec
 }

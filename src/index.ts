@@ -30,9 +30,9 @@ checkAndCreateFolder(join(__dirname, "..", store.BASE_FOLDER));
         case "AMAZON":
           if (!state.amazon.intial_screening.status) {
             await initiateAmazon(browser);
+            generateProductList((getAllState()).amazon.intial_screening.folders)
           }
-          generateProductList((getAllState()).amazon.intial_screening.folders)
-          await productScreeing()
+          await productScreeing(browser)
           break;
 
         default:

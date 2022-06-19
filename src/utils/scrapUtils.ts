@@ -65,14 +65,13 @@ export async function checkXpath(page: any, xpath: string) {
     return xpath;
   }
 }
-
-async function getInnerTextUsingXpath(page: any, xpath: string) {
+export async function getInnerTextUsingXpath(page: any, xpath: string) {
   try {
     await page.waitForXPath(xpath);
     let el = await page.$x(xpath);
     return await getInnerText(el, "innerText");
   } catch (error) {
     console.log(error);
-    return [1]
+    return null
   }
 }
